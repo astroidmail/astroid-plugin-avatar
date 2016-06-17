@@ -18,6 +18,7 @@ except ImportError:
 	libravatar_url = None
 
 CACHE_DIR = expanduser('~/.cache/astroid/avatar/')
+MIME_TYPE = 'image/jpeg' # implement handling of different ones
 
 class AvatarPlugin (GObject.Object, Astroid.Activatable):
 	object = GObject.property (type=GObject.Object)
@@ -83,12 +84,12 @@ class AvatarPlugin (GObject.Object, Astroid.Activatable):
 					with open(filename, 'wb') as f: # we had an error, do neg cache (empty file)
 						pass
 					data = self._load_preinstalled('default')
-		url = 'data:image/jpeg;base64,{}'.format(data)
+		url = 'data:{};base64,{}'.format(MIME_TYPE, data)
 		print('avatar: url=', url)
 		return url
 
 	def do_get_allowed_uris (self):
 		print('do_get_allowed_uris:')
-		return ['data:image/jpeg;base64,', ]
+		return [] # our uris are always allowed
 
 print ('avatar: plugin loaded')
