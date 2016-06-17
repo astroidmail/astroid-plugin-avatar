@@ -1,6 +1,10 @@
 import gi
 gi.require_version ('Astroid', '0.1')
+gi.require_version ('Gtk', '3.0')
+gi.require_version ('WebKit', '3.0')
 from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import WebKit
 from gi.repository import Astroid
 from urllib.parse import urlencode
 from hashlib import md5
@@ -17,6 +21,8 @@ CACHE_DIR = expanduser('~/.cache/astroid/avatar/')
 
 class AvatarPlugin (GObject.Object, Astroid.Activatable):
 	object = GObject.property (type=GObject.Object)
+	thread_view = GObject.property (type = Gtk.Box)
+	web_view = GObject.property (type = WebKit.WebView)
 
 	def do_activate (self):
 		if not exists(CACHE_DIR):
