@@ -15,7 +15,7 @@ mailthread view. This has some obvious drawbacks:
 
 this plugin adds the following features:
 
--	instead of gravatar the avatars can be retreived from libravatar if the
+-	instead of gravatar the avatars will be retreived from libravatar if the
 	library python3-libravatar is installed
 
 -	the images are persistet to not be retrieved again
