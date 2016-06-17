@@ -1,0 +1,11 @@
+[Plugin]
+Module=avatar
+Depends=
+Loader=python3
+Name=avatar plugin
+Description=plugin
+Authors=Michael Dietrich
+Copyright=GPLv3
+Website=
+Help=
+Hidden=false
