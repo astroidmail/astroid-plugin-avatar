@@ -34,7 +34,7 @@ class AvatarPlugin (GObject.Object, Astroid.Activatable):
 		return b64encode(data).decode()
 
 	def _load_preinstalled(self, n):
-		filename = expanduser('~/.config/astroid/plugins/avatar_{}.png').format(n)
+		filename = expanduser('~/.config/astroid/plugins/avatar/avatar_{}.png').format(n)
 		print('avatar: filename=', filename)
 		with open(filename, 'rb') as f:
 			data = f.read()
