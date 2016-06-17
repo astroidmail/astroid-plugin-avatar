@@ -1,12 +1,15 @@
 Avatar loader plugin
 ====================
 
+Intro
+-----
+
 Astroid loads by default avatars from gravatar by embedding the URL into the
-mailthread view. This has some obvios drawbacks:
+mailthread view. This has some obvious drawbacks:
 
--	avatars are not cached and gotten too frequently
+-	avatars are not cached and retrieved too frequently
 
--	gravatar learns your contacts
+-	gravatar may learn your contacts
 
 -	internal or system mail adresses are grabbed too
 
@@ -22,9 +25,21 @@ this plugin adds the following features:
 -	avatars for system/internal mailaddresses are supported (for example for
 	mailaddresses starting with root@)
 
-TODOs:
+TODOs
+-----
 
 -	there is no expirering of the cache
 
 -	the image type (mime type) is ignored (assumed jpeg)
+
+Installation
+------------
+
+the installation is simple as:
+
+ mkdir -p ~/.config/astroid/plugins/
+ cd ~/.config/astroid/plugins/
+ git clone https://github.com/emdete/astroid-plugin-avatar
+
+...and restart astroid.
 
