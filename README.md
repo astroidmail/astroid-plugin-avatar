@@ -28,7 +28,7 @@ this plugin adds the following features:
 TODOs
 -----
 
--	there is no expirering of the cache
+-	there is no expiry of the cache
 
 -	the image type (mime type) is ignored (assumed jpeg)
 
