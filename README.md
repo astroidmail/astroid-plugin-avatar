@@ -44,3 +44,7 @@ the installation is simple as:
 ```
 ...and restart astroid.
 
+Licensing
+---------
+
+See [LICENSE](./LICENSE) for licensing information.
