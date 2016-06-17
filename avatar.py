@@ -9,7 +9,7 @@ from gi.repository import Astroid
 from urllib.parse import urlencode
 from hashlib import md5
 from urllib.request import urlopen
-from os.path import exists, expanduser
+from os.path import exists, expanduser, dirname
 from os import unlink, makedirs
 from base64 import b64encode
 try:
@@ -17,7 +17,6 @@ try:
 except ImportError:
 	libravatar_url = None
 
-CACHE_DIR = expanduser('~/.cache/astroid/avatar/')
 MIME_TYPE = 'image/jpeg' # implement handling of different ones
 
 class AvatarPlugin (GObject.Object, Astroid.Activatable):
@@ -26,9 +25,11 @@ class AvatarPlugin (GObject.Object, Astroid.Activatable):
 	web_view = GObject.property (type = WebKit.WebView)
 
 	def do_activate (self):
-		if not exists(CACHE_DIR):
-			makedirs(CACHE_DIR)
-		print ('avatar: activated')
+		self.cache_dir = expanduser('~/.cache/astroid/avatar/')
+		self.config_dir = dirname(__file__)
+		if not exists(self.cache_dir):
+			makedirs(self.cache_dir)
+		print ('avatar: activated', __file__)
 
 	def do_deactivate (self):
 		print ('avatar: deactivated')
@@ -41,7 +42,7 @@ class AvatarPlugin (GObject.Object, Astroid.Activatable):
 		return b64encode(data).decode()
 
 	def _load_preinstalled(self, name):
-		filename = expanduser('~/.config/astroid/plugins/avatar/avatar_{}.png').format(name)
+		filename = '{}/avatar_{}.png'.format(self.config_dir, name)
 		if exists(filename):
 			print('avatar: filename=', filename)
 			with open(filename, 'rb') as f:
@@ -53,7 +54,7 @@ class AvatarPlugin (GObject.Object, Astroid.Activatable):
 		email = email.lower()
 		data = self._load_preinstalled(email.split('@')[0])
 		if not data:
-			filename = '{}{}.jpg'.format(CACHE_DIR, email, type_, size)
+			filename = '{}{}.jpg'.format(self.cache_dir, email, type_, size)
 			print('avatar: filename=', filename)
 			if exists(filename):
 				# TODO check age
