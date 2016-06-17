@@ -39,21 +39,19 @@ class AvatarPlugin (GObject.Object, Astroid.Activatable):
 			f.write(data)
 		return b64encode(data).decode()
 
-	def _load_preinstalled(self, n):
-		filename = expanduser('~/.config/astroid/plugins/avatar/avatar_{}.png').format(n)
-		print('avatar: filename=', filename)
-		with open(filename, 'rb') as f:
-			data = f.read()
-		return b64encode(data).decode()
+	def _load_preinstalled(self, name):
+		filename = expanduser('~/.config/astroid/plugins/avatar/avatar_{}.png').format(name)
+		if exists(filename):
+			print('avatar: filename=', filename)
+			with open(filename, 'rb') as f:
+				data = f.read()
+			return b64encode(data).decode()
 
 	def do_get_avatar_uri (self, email, type_, size):
 		print('avatar:', email, type_, size)
 		email = email.lower()
-		for n in ('cron', 'nagios', 'root', ): # TODO determine dynamic
-			if email.startswith('{}@'.format(n)):
-				data = self._load_preinstalled(n)
-				break
-		else:
+		data = self._load_preinstalled(email.split('@')[0])
+		if not data:
 			filename = '{}{}.jpg'.format(CACHE_DIR, email, type_, size)
 			print('avatar: filename=', filename)
 			if exists(filename):
