@@ -19,7 +19,7 @@ except ImportError:
 
 MIME_TYPE = 'image/jpeg' # implement handling of different ones
 
-class AvatarPlugin (GObject.Object, Astroid.Activatable):
+class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 	object = GObject.property (type=GObject.Object)
 	thread_view = GObject.property (type = Gtk.Box)
 	web_view = GObject.property (type = WebKit.WebView)
