@@ -18,7 +18,7 @@ this plugin adds the following features:
 -	instead of gravatar the avatars will be retreived from libravatar if the
 	library python3-libravatar is installed
 
--	the images are persistet to not be retrieved again
+-	the images are persisted to not be retrieved again
 
 -	the url is a base64 url containing all image data (out of security reasons)
 
