@@ -13,9 +13,18 @@ from os.path import exists, expanduser, dirname
 from os import unlink, makedirs
 from base64 import b64encode
 try:
-	from libravatar import libravatar_url
+	from libravatar import libravatar_url as avatar_url
+	print('avatar: using libravatar')
 except ImportError:
-	libravatar_url = None
+	# fallback to home grown gravatar url
+	def avatar_url(email, https=True, size=48, default='404', ):
+		return 'https://www.gravatar.com/avatar/{}?{}'.format(
+			md5(email.encode('ascii', 'replace')).hexdigest(),
+			urlencode(dict(
+				d=default,
+				s=str(size),
+				)))
+	print('avatar: using gravatar')
 
 MIME_TYPE = 'image/jpeg' # implement handling of different ones
 
@@ -66,20 +75,9 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 					data = b64encode(data).decode()
 			else:
 				try:
-					if libravatar_url: # we have the libravatar library
-						url = libravatar_url(email,
-							https=True,
-							size=size,
-							default='404',
-							)
-						print('avatar: libravatar_url=', url)
-						data = self._load(url, filename)
-					else: # do gravatar:
-						url = 'https://www.gravatar.com/avatar/{}?{}'.format(
-							md5(email.encode('ascii', 'replace')).hexdigest(),
-							urlencode({'d':'404', 's':str(size)}))
-						print('avatar: gravatar=', url)
-						data = self._load(url, filename)
+					url = avatar_url(email, https=True, size=size, default='404', )
+					print('avatar: libravatar_url=', url)
+					data = self._load(url, filename)
 				except Exception as e:
 					print('_load: e=', e)
 					with open(filename, 'wb') as f: # we had an error, do neg cache (empty file)
