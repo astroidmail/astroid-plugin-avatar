@@ -2,10 +2,12 @@ import gi
 gi.require_version ('Astroid', '0.1')
 gi.require_version ('Gtk', '3.0')
 gi.require_version ('WebKit', '3.0')
+gi.require_version ('GMime', '2.6')
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import WebKit
 from gi.repository import Astroid
+from gi.repository import GMime
 from urllib.parse import urlencode
 from hashlib import md5
 from urllib.request import urlopen
@@ -49,7 +51,7 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 				data = f.read()
 			return b64encode(data).decode()
 
-	def do_get_avatar_uri (self, email, type_, size):
+	def do_get_avatar_uri (self, email, type_, size, message):
 		print('avatar:', email, type_, size)
 		email = email.lower()
 		data = self._load_preinstalled(email.split('@')[0])
