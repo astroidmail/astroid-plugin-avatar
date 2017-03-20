@@ -44,7 +44,7 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 		print ('avatar: deactivated')
 
 	def _load(self, url, filename):
-		with urlopen(url, timeout=10) as response:
+		with urlopen(url, timeout=3) as response:
 			data = response.read()
 		with open(filename, 'wb') as f:
 			f.write(data)
