@@ -28,8 +28,6 @@ except ImportError:
 				)))
 	print('avatar: using gravatar')
 
-MIME_TYPE = 'image/jpeg' # implement handling of different ones
-
 class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 	object = GObject.property (type=GObject.Object)
 	thread_view = GObject.property (type = Gtk.Box)
@@ -46,7 +44,7 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 		print ('avatar: deactivated')
 
 	def _load(self, url, filename):
-		with urlopen(url) as response:
+		with urlopen(url, timeout = 10) as response:
 			data = response.read()
 		with open(filename, 'wb') as f:
 			f.write(data)
@@ -61,11 +59,23 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 			return b64encode(data).decode()
 
 	def do_get_avatar_uri (self, email, type_, size, message):
+		# Check if message is from GitHub
+		github_user = message.get_header ('X-GitHub-Sender')
+		if github_user:
+			email = github_user
+			mime_type = 'image/png'
+			ext				= 'png'
+		else:
+			email = email.lower()
+			mime_type = 'image/jpeg'
+			ext				= 'jpg'
+
+
 		print('avatar:', email, type_, size)
-		email = email.lower()
+
 		data = self._load_preinstalled(email.split('@')[0])
 		if not data:
-			filename = '{}{}.jpg'.format(self.cache_dir, email, type_, size)
+			filename = '{}{}.{}'.format(self.cache_dir, email, ext)
 			print('avatar: filename=', filename)
 			if exists(filename):
 				# TODO check age
@@ -73,20 +83,33 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 					data = f.read()
 				if not data: # has no avatar, give default
 					data = self._load_preinstalled('default')
+					mime_type = 'image/jpeg'
+					ext				= 'jpg'
 				else:
 					data = b64encode(data).decode()
 			else:
 				try:
-					url = avatar_url(email, https=True, size=size, default='404', )
-					print('avatar: libravatar_url=', url)
-					data = self._load(url, filename)
+					if github_user:
+						url = "https://github.com/%s.png" % github_user
+						print ('avatar: github url=', url)
+						data = self._load(url, filename)
+
+					else:
+						url = avatar_url(email, https=True, size=size, default='404', )
+						print('avatar: libravatar_url=', url)
+						data = self._load(url, filename)
 				except Exception as e:
 					print('_load: e=', e)
 					with open(filename, 'wb') as f: # we had an error, do neg cache (empty file)
 						pass
 					data = self._load_preinstalled('default')
-		url = 'data:{};base64,{}'.format(MIME_TYPE, data)
-		print('avatar: url=', url)
+		else:
+			# pre-installed
+			mime_type = 'image/jpeg'
+			ext				= 'jpg'
+
+
+		url = 'data:{};base64,{}'.format(mime_type, data)
 		return url
 
 	def do_get_allowed_uris (self):
