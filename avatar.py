@@ -44,7 +44,7 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 		print ('avatar: deactivated')
 
 	def _load(self, url, filename):
-		with urlopen(url, timeout = 10) as response:
+		with urlopen(url, timeout=10) as response:
 			data = response.read()
 		with open(filename, 'wb') as f:
 			f.write(data)
@@ -64,11 +64,11 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 		if github_user:
 			email = github_user
 			mime_type = 'image/png'
-			ext				= 'png'
+			ext = 'png'
 		else:
 			email = email.lower()
 			mime_type = 'image/jpeg'
-			ext				= 'jpg'
+			ext = 'jpg'
 
 
 		print('avatar:', email, type_, size)
@@ -84,7 +84,7 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 				if not data: # has no avatar, give default
 					data = self._load_preinstalled('default')
 					mime_type = 'image/jpeg'
-					ext				= 'jpg'
+					ext = 'jpg'
 				else:
 					data = b64encode(data).decode()
 			else:
@@ -106,7 +106,7 @@ class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 		else:
 			# pre-installed
 			mime_type = 'image/jpeg'
-			ext				= 'jpg'
+			ext = 'jpg'
 
 
 		url = 'data:{};base64,{}'.format(mime_type, data)
