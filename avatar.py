@@ -1,7 +1,6 @@
 import gi
 gi.require_version ('Astroid', '0.1')
 gi.require_version ('Gtk', '3.0')
-gi.require_version ('WebKit', '3.0')
 
 try:
   gi.require_version ('GMime', '3.0')
@@ -10,7 +9,6 @@ except ValueError:
 
 from gi.repository import GObject
 from gi.repository import Gtk
-from gi.repository import WebKit
 from gi.repository import Astroid
 from gi.repository import GMime
 from urllib.parse import urlencode
@@ -36,7 +34,6 @@ except ImportError:
 class AvatarPlugin (GObject.Object, Astroid.ThreadViewActivatable):
 	object = GObject.property (type=GObject.Object)
 	thread_view = GObject.property (type = Gtk.Box)
-	web_view = GObject.property (type = WebKit.WebView)
 
 	def do_activate (self):
 		self.cache_dir = expanduser('~/.cache/astroid/avatar/')
